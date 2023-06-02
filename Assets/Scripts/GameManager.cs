@@ -43,6 +43,7 @@ public class GameManager : MonoBehaviour
     // Use this for initialization
     void Start ()
     {
+        Lives = MaxLives;
         money = InitialMoney;
 
         turretPrice = InitialTurretPrice;
@@ -59,7 +60,6 @@ public class GameManager : MonoBehaviour
     public void EnemyEscaped(GameObject enemy)
     {
         Lives--;
-        CameraShaker.Instance.Shake();
         healthDrawer.Draw(Lives);
 
         if (Lives <= 0)
