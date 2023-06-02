@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Assets.Scripts;
+using UnityEngine;
 
 
 // uses algorithm from https://gamedev.stackexchange.com/questions/27056/how-to-achieve-uniform-speed-of-movement-on-a-bezier-curve
@@ -49,6 +50,7 @@ public class PathFollower : MonoBehaviour
         t = t + Time.deltaTime * Speed / tangent.magnitude;
 
         transform.position = Bezier.EvaluateCubic(A, B, C, D, t);
+        transform.eulerAngles = new Vector3(0.0f, 0.0f, MathHelpers.Angle(tangent, Vector2.right));
 
         if (gameObject.layer == LayerMask.NameToLayer("enemy"))
             EnemyManagerScript.Instance.UpdateEnemy(gameObject, path.NumSegments - segmentIndex - t);

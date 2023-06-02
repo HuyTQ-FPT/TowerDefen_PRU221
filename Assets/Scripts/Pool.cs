@@ -4,67 +4,85 @@ using UnityEngine;
 
 public class Pool : MonoBehaviour
 {
-	private static Pool poolInstance;
-	public static Pool Instance
-	{
-		get
-		{
-			if (poolInstance == null)
-				poolInstance = FindObjectOfType<Pool>();
+    private static Pool poolInstance;
+    public static Pool Instance
+    {
+        get
+        {
+            if (poolInstance == null)
+                poolInstance = FindObjectOfType<Pool>();
 
-			return poolInstance;
-		}
-	}
+            return poolInstance;
+        }
+    }
 
-	public GameObject[] PooledObjects;
+    private class SinglePool
+    {
+        public HashSet<GameObject> Active;
+        public Queue<GameObject> Available;
 
-	private Dictionary<string, GameObject> pooledObjects = new Dictionary<string, GameObject>();
-	private Dictionary<string, Queue<GameObject>> pool = new Dictionary<string, Queue<GameObject>>();
+        public SinglePool()
+        {
+            Available = new Queue<GameObject>();
+        }
+    }
+    
+    public int StartCapacity = 10;
+    public GameObject[] PooledObjects;
 
-	private void Start()
-	{
-		foreach (var item in PooledObjects)
-		{
-			RegisterObject(item);
-		}
-	}
+    private Dictionary<string, GameObject> pooledObjects = new Dictionary<string, GameObject>();
+    private Dictionary<string, Queue<GameObject>> pool = new Dictionary<string, Queue<GameObject>>();
 
-	public void RegisterObject(GameObject prototype)
-	{
-		if (pooledObjects.ContainsKey(prototype.tag)) return;
+    private void Start()
+    {
+        foreach (var item in PooledObjects)
+        {
+            RegisterObject(item);
+        }
+    }
 
-		var singlePool = new Queue<GameObject>();
-		pooledObjects.Add(prototype.tag, prototype);
-		pool.Add(prototype.tag, singlePool);
-	}
+    public void RegisterObject(GameObject prototype)
+    {
+        if (pooledObjects.ContainsKey(prototype.tag)) return;
+        
+        var singlePool = new Queue<GameObject>();
+        for (var i = 0; i < StartCapacity; i++)
+        {
+            var newItem = Instantiate(prototype, transform);
+            newItem.SetActive(false);
+            singlePool.Enqueue(newItem);
+        }
+
+        pooledObjects.Add(prototype.tag, prototype);
+        pool.Add(prototype.tag, singlePool);
+    }
 
 	public GameObject ActivateObject(string tag)
-	{
-		if (!pooledObjects.ContainsKey(tag))
-			throw new KeyNotFoundException();
+    {
+        if (!pooledObjects.ContainsKey(tag))
+            throw new KeyNotFoundException();
 
-		var singlePool = pool[tag];
+        var singlePool = pool[tag];
 
-		if (singlePool.Count == 0)
-		{
-			var newItem = Instantiate(pooledObjects[tag], transform);
-			return newItem;
-		}
+        if (singlePool.Count == 0)
+        {
+            var newItem = Instantiate(pooledObjects[tag], transform);
+            return newItem;
+        }
 
-		var item = singlePool.Dequeue();
+        var item = singlePool.Dequeue();
 
-		return item;
-	}
+        return item;
+    }
 
-	public void DeactivateObject(GameObject item)
-	{
-		if (!pooledObjects.ContainsKey(item.tag))
-			throw new KeyNotFoundException();
+    public void DeactivateObject(GameObject item)
+    {
+        if (!pooledObjects.ContainsKey(item.tag))
+            throw new KeyNotFoundException();
 
-		var singlePool = pool[item.tag];
+        var singlePool = pool[item.tag];
 
-		item.SetActive(false);
-		singlePool.Enqueue(item);
-	}
-
+        item.SetActive(false);
+        singlePool.Enqueue(item);
+    }
 }
