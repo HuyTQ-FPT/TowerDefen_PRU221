@@ -1,0 +1,12 @@
+MaxAlive:5:	
+PriceTurret:90:	
+PriceRocket:600:	
+MaxhealthTurret:15:
+MoneyTurret:15:	
+MaxhealthTank:600:	
+MoneyTank:140:	
+SpeedTurret:100:	
+SpeedTank:50:	
+MoneyInit:150:	
+PriceAddTurret:50:	
+PriceAddTank:300:

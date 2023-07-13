@@ -8,7 +8,6 @@ public class BuildLocationScript : MonoBehaviour, IPointerDownHandler, IPointerU
     [HideInInspector]
     public static GameObject OpenCanvas;
     private GameObject canvas;
-    private GameObject turret;
     private bool pressed = false;
 
     void Start()

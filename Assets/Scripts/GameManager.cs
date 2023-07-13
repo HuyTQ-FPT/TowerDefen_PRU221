@@ -17,7 +17,6 @@ public class GameManager : MonoBehaviour
             return gameManagerInstance;
         }
     }
-
     public const int MaxLives = 5;
     public int InitialMoney;
 
@@ -41,6 +40,7 @@ public class GameManager : MonoBehaviour
     private int remainingEnemies;
 
     // Use this for initialization
+    
     void Start ()
     {
         Lives = MaxLives;
@@ -103,12 +103,6 @@ public class GameManager : MonoBehaviour
 
         moneyDrawer.Draw(money);
     }
-
-    //public void CoinCollected(GameObject coin)
-    //{
-    //    money += CoinScript.Value;
-    //    moneyDrawer.Draw(money);
-    //}
 
     public bool EnoughMoneyForTurret(string tag)
     {
